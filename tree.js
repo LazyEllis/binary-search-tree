@@ -1,10 +1,22 @@
 import Node from "./node.js";
 
+/**
+ * Class representing a binary search tree.
+ */
 class Tree {
+  /**
+   * Create a binary search tree.
+   * @param {Array} array - The array of values to build the tree from.
+   */
   constructor(array) {
     this.root = this.buildTree(array);
   }
 
+  /**
+   * Build a binary search tree from a sorted array.
+   * @param {Array} array - The sorted array of values.
+   * @returns {Node} The root node of the built tree.
+   */
   buildTree(array) {
     const sortedArray = [...new Set(array)];
     sortedArray.sort((a, b) =>
@@ -13,6 +25,11 @@ class Tree {
     return this.buildTreeHelper(sortedArray);
   }
 
+  /**
+   * Helper function to recursively build the tree.
+   * @param {Array} sortedArray - The sorted array of values.
+   * @returns {Node} The root node of the built subtree.
+   */
   buildTreeHelper(sortedArray) {
     if (sortedArray.length === 0) return null;
     if (sortedArray.length === 1) return new Node(sortedArray[0]);
@@ -29,6 +46,12 @@ class Tree {
     return treeNode;
   }
 
+  /**
+   * Print the tree in a readable format.
+   * @param {Node} node - The current node to print.
+   * @param {string} prefix - The prefix for indentation.
+   * @param {boolean} isLeft - Indicates if the node is left child.
+   */
   prettyPrint(node = this.root, prefix = "", isLeft = true) {
     if (node === null) return;
 
@@ -47,6 +70,11 @@ class Tree {
     }
   }
 
+  /**
+   * Insert a value into the tree.
+   * @param {*} value - The value to insert.
+   * @param {Node} node - The current node to start insertion.
+   */
   insert(value, node = this.root) {
     if (!node) {
       this.root = new Node(value);
@@ -72,6 +100,12 @@ class Tree {
     }
   }
 
+  /**
+   * Remove a value from the tree.
+   * @param {*} value - The value to remove.
+   * @param {Node} node - The current node to start removal.
+   * @returns {Node} The root node after removal.
+   */
   remove(value, node = this.root) {
     if (!node) return null;
 
@@ -91,6 +125,11 @@ class Tree {
     return node;
   }
 
+  /**
+   * Find the minimum value node in the tree.
+   * @param {Node} node - The starting node to search from.
+   * @returns {Node} The node with the minimum value.
+   */
   findMin(node) {
     while (node.left) {
       node = node.left;
@@ -98,6 +137,11 @@ class Tree {
     return node;
   }
 
+  /**
+   * Find a value in the tree.
+   * @param {*} value - The value to find.
+   * @returns {Node} The node containing the value, or null if not found.
+   */
   find(value) {
     let current = this.root;
     while (current) {
@@ -107,7 +151,11 @@ class Tree {
     return null;
   }
 
-  levelOrder() {
+  /**
+   * Perform a level-order traversal of the tree.
+   * @returns {Array} The array of values in level-order.
+   */
+  traverseLevelOrder() {
     if (!this.root) return [];
     const array = [];
     const queue = [this.root];
@@ -122,6 +170,12 @@ class Tree {
     return array;
   }
 
+  /**
+   * Perform an in-order traversal of the tree.
+   * @param {Node} node - The current node to start traversal.
+   * @param {Array} array - The array to store traversal results.
+   * @returns {Array} The array of values in in-order traversal.
+   */
   traverseInOrder(node = this.root, array = []) {
     if (!node) return array;
     this.traverseInOrder(node.left, array);
@@ -130,6 +184,12 @@ class Tree {
     return array;
   }
 
+  /**
+   * Perform a pre-order traversal of the tree.
+   * @param {Node} node - The current node to start traversal.
+   * @param {Array} array - The array to store traversal results.
+   * @returns {Array} The array of values in pre-order traversal.
+   */
   traversePreOrder(node = this.root, array = []) {
     if (!node) return array;
     array.push(node.value);
@@ -138,6 +198,12 @@ class Tree {
     return array;
   }
 
+  /**
+   * Perform a post-order traversal of the tree.
+   * @param {Node} node - The current node to start traversal.
+   * @param {Array} array - The array to store traversal results.
+   * @returns {Array} The array of values in post-order traversal.
+   */
   traversePostOrder(node = this.root, array = []) {
     if (!node) return array;
     this.traversePostOrder(node.left, array);
@@ -146,15 +212,30 @@ class Tree {
     return array;
   }
 
+  /**
+   * Calculate the height of the tree.
+   * @param {Node} node - The current node to calculate height.
+   * @returns {number} The height of the tree.
+   */
   height(node = this.root) {
     if (!node) return -1;
     return 1 + Math.max(this.height(node.left), this.height(node.right));
   }
 
+  /**
+   * Calculate the depth of a node in the tree.
+   * @param {*} value - The value of the node to calculate depth.
+   * @returns {number} The depth of the node.
+   */
   depth(value) {
     return this.depthHelper(this.root, value, 0);
   }
 
+  /**
+   * Calculate the depth of a node in the tree.
+   * @param {*} value - The value of the node to calculate depth.
+   * @returns {number} The depth of the node.
+   */
   depthHelper(node, value, depth) {
     if (!node) return -1;
     if (node.value === value) return depth;
@@ -165,10 +246,19 @@ class Tree {
     );
   }
 
+  /**
+   * Check if the tree is balanced.
+   * @returns {boolean} True if the tree is balanced, false otherwise.
+   */
   isBalanced() {
     return this.checkBalanced(this.root);
   }
 
+  /**
+   * Check if the subtree rooted at a given node is balanced.
+   * @param {Node} node - The root node of the subtree to check.
+   * @returns {boolean} True if the subtree is balanced, false otherwise.
+   */
   checkBalanced(node) {
     if (!node) return true;
     const leftHeight = this.height(node.left);
@@ -180,6 +270,9 @@ class Tree {
     );
   }
 
+  /**
+   * Rebalance the tree.
+   */
   rebalance() {
     const array = this.traverseInOrder();
     this.root = this.buildTreeHelper(array);
